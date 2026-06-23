@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: service-core-customer
+
+  config:
+    import: "configserver:http://localhost:8888"
+
+
+topic:
+  customer-created: customer-created
+  customer-updated: customer-updated

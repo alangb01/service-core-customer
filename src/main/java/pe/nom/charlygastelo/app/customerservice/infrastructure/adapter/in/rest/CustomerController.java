@@ -1,0 +1,107 @@
+package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.CreateCustomerUseCase;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.DeleteCustomerUseCase;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.GetCustomerUseCase;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.ListCustomersUseCase;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.UpdateCustomerUseCase;
+import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
+
+@RestController
+@RequestMapping("/api/customers")
+public class CustomerController {
+
+    private final CreateCustomerUseCase createCustomerUseCase;
+    private final GetCustomerUseCase getCustomerUseCase;
+    private final ListCustomersUseCase listCustomersUseCase;
+    private final UpdateCustomerUseCase updateCustomerUseCase;
+    private final DeleteCustomerUseCase deleteCustomerUseCase;
+    private final RestMapper restMapper;
+
+    public CustomerController(CreateCustomerUseCase createCustomerUseCase,
+                              GetCustomerUseCase getCustomerUseCase,
+                              ListCustomersUseCase listCustomersUseCase,
+                              UpdateCustomerUseCase updateCustomerUseCase,
+                              DeleteCustomerUseCase deleteCustomerUseCase,
+                              RestMapper restMapper) {
+        this.createCustomerUseCase = createCustomerUseCase;
+        this.getCustomerUseCase = getCustomerUseCase;
+        this.listCustomersUseCase = listCustomersUseCase;
+        this.updateCustomerUseCase = updateCustomerUseCase;
+        this.deleteCustomerUseCase = deleteCustomerUseCase;
+        this.restMapper = restMapper;
+    }
+
+    @PostMapping
+    public Single<ResponseEntity<CustomerResponse>> create(@RequestBody CreateCustomerRequest request) {
+        Customer customer = restMapper.toDomain(request);
+
+        return createCustomerUseCase.execute(customer)
+                .map(saved -> ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(restMapper.toResponse(saved)))
+                .toSingle();
+    }
+
+    @GetMapping("/{id}")
+    public Single<ResponseEntity<CustomerResponse>> getById(@PathVariable String id) {
+        return getCustomerUseCase.byId(id)
+                .map(customer -> ResponseEntity.ok(restMapper.toResponse(customer)))
+                .defaultIfEmpty(notFoundCustomerResponse());
+    }
+
+    @GetMapping("/document")
+    public Single<ResponseEntity<CustomerResponse>> getByDocument(@RequestParam String type,
+                                                                  @RequestParam String number) {
+        return getCustomerUseCase.byDocument(type, number)
+                .map(customer -> ResponseEntity.ok(restMapper.toResponse(customer)))
+                .defaultIfEmpty(notFoundCustomerResponse());
+    }
+
+    @GetMapping
+    public Flowable<CustomerResponse> list() {
+        return listCustomersUseCase.all()
+                .map(restMapper::toResponse);
+    }
+
+    @PutMapping("/{id}")
+    public Single<ResponseEntity<CustomerResponse>> update(@PathVariable String id,
+                                                           @RequestBody CreateCustomerRequest request) {
+        Customer customer = restMapper.toDomain(request);
+
+        return updateCustomerUseCase.execute(id, customer)
+                .map(updated -> ResponseEntity.ok(restMapper.toResponse(updated)))
+                .defaultIfEmpty(notFoundCustomerResponse());
+    }
+
+    @DeleteMapping("/{id}")
+    public Single<ResponseEntity<Void>> delete(@PathVariable String id) {
+        return getCustomerUseCase.byId(id) // Maybe<Customer>
+                .flatMapSingle(customer ->
+                        deleteCustomerUseCase.execute(id) // Completable
+                                .andThen(Single.just(noContentResponse()))
+                )
+                .defaultIfEmpty(notFoundVoidResponse());
+    }
+
+    private ResponseEntity<CustomerResponse> notFoundCustomerResponse() {
+        return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<Void> notFoundVoidResponse() {
+        return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<Void> noContentResponse() {
+        return ResponseEntity.noContent().build();
+    }
+}

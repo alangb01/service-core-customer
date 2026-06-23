@@ -1,0 +1,43 @@
+{
+  "type": "record",
+  "name": "CustomerCreatedEvent",
+  "namespace": "pe.nom.charlygastelo.app.customerservice.infrastructure.avro.events",
+  "fields": [
+    {
+      "name": "customerId",
+      "type": "string"
+    },
+    {
+      "name": "customerType",
+      "type": "string"
+    },
+    {
+      "name": "documentType",
+      "type": "string"
+    },
+    {
+      "name": "documentNumber",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "phone",
+      "type": "string"
+    },
+    {
+      "name": "createdAt",
+      "type": "long"
+    }
+  ]
+}
