@@ -7,6 +7,10 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.avro.events.CustomerCreatedEvent;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.avro.events.CustomerUpdatedEvent;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 
 @Component
 public class CustomerEventMapper {
@@ -21,7 +25,7 @@ public class CustomerEventMapper {
                 domain.lastName(),
                 domain.email(),
                 domain.phone(),
-                null
+                Instant.now().getEpochSecond()
         );
     }
 
@@ -35,7 +39,7 @@ public class CustomerEventMapper {
                 domain.lastName(),
                 domain.email(),
                 domain.phone(),
-                null
+                Instant.now().getEpochSecond()
         );
     }
 }

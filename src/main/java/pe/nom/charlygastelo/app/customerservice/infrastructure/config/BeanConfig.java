@@ -81,7 +81,7 @@ public class BeanConfig {
     }
 
     @Bean
-    public DeleteCustomerUseCase deleteCustomerUseCase(CustomerRepositoryPort repository) {
-        return new DeleteCustomerUseCase(repository);
+    public DeleteCustomerUseCase deleteCustomerUseCase(CustomerRepositoryPort repository, CustomerCachePort cache) {
+        return new DeleteCustomerUseCase(repository, cache);
     }
 }
