@@ -3,7 +3,7 @@ package pe.nom.charlygastelo.app.customerservice.application.usecase;
 import io.reactivex.rxjava3.core.Single;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerExistsException;
+import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAlreadyExistsException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
@@ -57,7 +57,7 @@ class CreateCustomerUseCaseTest {
 
         useCase.execute(customer)
                 .test()
-                .assertError(CustomerExistsException.class)
+                .assertError(CustomerAlreadyExistsException.class)
                 .assertNotComplete();
 
         verify(repository).checkByCustomerTypeAndDocumentTypeAndDocumentNumber(customer.customerType().toString(),

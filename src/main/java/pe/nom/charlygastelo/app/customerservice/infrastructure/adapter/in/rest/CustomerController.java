@@ -1,5 +1,8 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest;
 
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
+import jakarta.ws.rs.core.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import pe.nom.charlygastelo.app.customerservice.application.usecase.UpdateCustom
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 @RestController
@@ -48,15 +52,14 @@ public class CustomerController {
         return createCustomerUseCase.execute(customer)
                 .map(saved -> ResponseEntity
                         .status(HttpStatus.CREATED)
-                        .body(restMapper.toResponse(saved)))
-                .toSingle();
+                        .body(restMapper.toResponse(saved)));
     }
 
     @GetMapping("/{id}")
     public Single<ResponseEntity<CustomerResponse>> getById(@PathVariable String id) {
         return getCustomerUseCase.byId(id)
                 .map(customer -> ResponseEntity.ok(restMapper.toResponse(customer)))
-                .defaultIfEmpty(notFoundCustomerResponse());
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/document")
@@ -64,7 +67,7 @@ public class CustomerController {
                                                                   @RequestParam String number) {
         return getCustomerUseCase.byDocument(type, number)
                 .map(customer -> ResponseEntity.ok(restMapper.toResponse(customer)))
-                .defaultIfEmpty(notFoundCustomerResponse());
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -75,33 +78,21 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public Single<ResponseEntity<CustomerResponse>> update(@PathVariable String id,
-                                                           @RequestBody CreateCustomerRequest request) {
+                                                           @RequestBody UpdateCustomerRequest request) {
         Customer customer = restMapper.toDomain(request);
 
         return updateCustomerUseCase.execute(id, customer)
-                .map(updated -> ResponseEntity.ok(restMapper.toResponse(updated)))
-                .defaultIfEmpty(notFoundCustomerResponse());
+                .map(updated -> ResponseEntity.ok(restMapper.toResponse(updated))).toSingle();
     }
 
     @DeleteMapping("/{id}")
-    public Single<ResponseEntity<Void>> delete(@PathVariable String id) {
-        return getCustomerUseCase.byId(id) // Maybe<Customer>
+    public @NonNull Single<ResponseEntity<Object>> delete(@PathVariable String id) {
+
+        return getCustomerUseCase.byId(id)
+
                 .flatMapSingle(customer ->
-                        deleteCustomerUseCase.execute(id) // Completable
-                                .andThen(Single.just(noContentResponse()))
-                )
-                .defaultIfEmpty(notFoundVoidResponse());
-    }
-
-    private ResponseEntity<CustomerResponse> notFoundCustomerResponse() {
-        return ResponseEntity.notFound().build();
-    }
-
-    private ResponseEntity<Void> notFoundVoidResponse() {
-        return ResponseEntity.notFound().build();
-    }
-
-    private ResponseEntity<Void> noContentResponse() {
-        return ResponseEntity.noContent().build();
+                        deleteCustomerUseCase.execute(id)
+                                .toSingleDefault(ResponseEntity.<Void>noContent().build())
+                ).switchIfEmpty(Single.just(ResponseEntity.notFound().build()));
     }
 }

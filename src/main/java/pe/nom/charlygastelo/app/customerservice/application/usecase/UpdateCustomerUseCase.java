@@ -3,7 +3,7 @@ package pe.nom.charlygastelo.app.customerservice.application.usecase;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
-import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerNotFoundException;
+import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerNotFoundException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 

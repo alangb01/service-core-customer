@@ -21,7 +21,7 @@ public record Customer(
                 newData.lastName,
                 newData.email,
                 newData.phone,
-                this.active                 // se mantiene
+                newData.active              // se mantiene
         );
 
     }

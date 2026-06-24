@@ -6,43 +6,48 @@ import org.mockito.Mockito;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
-import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerServicePort;
-import io.reactivex.rxjava3.core.Single;
-import reactor.test.StepVerifier;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class GetCustomerUseCaseTest {
 
-    private final CustomerServicePort service = Mockito.mock(CustomerServicePort.class);
-    private final GetCustomerUseCase useCase = new GetCustomerUseCase(service);
+    private final CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
+    private final CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
+    private final GetCustomerUseCase useCase = new GetCustomerUseCase(repository, cache);
 
     @Test
     void byIdShouldReturnCustomer() {
         Customer customer = customer();
 
-        when(service.getById("1")).thenReturn(Maybe.just(customer));
+        when(repository.findById("1")).thenReturn(Maybe.just(customer));
 
-        StepVerifier.create(useCase.byId("1").toFlowable())
-                .expectNext(customer)
-                .verifyComplete();
+        useCase.byId("1")
+                .test()
+                .assertValue(customer)
+                .assertComplete()
+                .assertNoErrors();
 
-        verify(service).getById("1");
+        verify(repository).findById("1");
     }
+
 
 
     @Test
     void byDocumentShouldReturnCustomer() {
         Customer customer = customer();
 
-        when(service.getByDocument("DNI", "12345678")).thenReturn(Maybe.just(customer));
+        when(repository.findByDocument("DNI", "12345678")).thenReturn(Maybe.just(customer));
 
-        StepVerifier.create(useCase.byDocument("DNI", "12345678").toFlowable())
-                .expectNext(customer)
-                .verifyComplete();
+        useCase.byDocument("DNI", "12345678")
+                .test()
+                .assertValue(customer)
+                .assertComplete()
+                .assertNoErrors();
 
-        verify(service).getByDocument("DNI", "12345678");
+        verify(repository).findByDocument("DNI", "12345678");
     }
 
 

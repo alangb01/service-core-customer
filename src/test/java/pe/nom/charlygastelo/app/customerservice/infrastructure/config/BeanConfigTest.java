@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.CreateCustomerUseCase;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.GetCustomerUseCase;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.ListCustomersUseCase;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
@@ -40,8 +41,8 @@ class BeanConfigTest {
     @Test
     void getCustomerUseCaseShouldReturnGetCustomerUseCase() {
         CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
-
-        GetCustomerUseCase result = beanConfig.getCustomerUseCase(repository);
+        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
+        GetCustomerUseCase result = beanConfig.getCustomerUseCase(repository,cache);
 
         assertThat(result).isNotNull();
         assertThat(result).isInstanceOf(GetCustomerUseCase.class);

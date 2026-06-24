@@ -2,7 +2,7 @@ package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
 import io.reactivex.rxjava3.core.Completable;
 import lombok.RequiredArgsConstructor;
-import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerNotFoundException;
+import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerNotFoundException;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 
 /**
@@ -21,8 +21,14 @@ public class DeleteCustomerUseCase {
      */
     public Completable execute(String id) {
         return customerRepository.existsById(id)
-                .flatMapCompletable(exists -> Boolean.TRUE.equals(exists)
-                        ? customerRepository.deleteById(id)
-                        : Completable.error(new CustomerNotFoundException("Customer not found: " + id)));
+                .flatMapCompletable(exists -> {
+                    if (!exists) {
+                        return Completable.error(
+                                new CustomerNotFoundException("Customer not found: " + id)
+                        );
+                    }
+                    return customerRepository.deleteById(id);
+                });
     }
+
 }

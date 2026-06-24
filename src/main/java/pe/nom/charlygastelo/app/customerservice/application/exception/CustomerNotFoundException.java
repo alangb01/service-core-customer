@@ -1,4 +1,4 @@
-package pe.nom.charlygastelo.app.customerservice.domain.exception;
+package pe.nom.charlygastelo.app.customerservice.application.exception;
 
 public class CustomerNotFoundException extends RuntimeException {
     public CustomerNotFoundException(String message) {

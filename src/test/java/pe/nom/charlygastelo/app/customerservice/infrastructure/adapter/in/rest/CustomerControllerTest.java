@@ -3,6 +3,7 @@ package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +55,9 @@ class CustomerControllerTest {
         CustomerResponse response = response();
 
         when(restMapper.toDomain(request)).thenReturn(customerToCreate);
-        when(createCustomerUseCase.execute(any(Customer.class))).thenReturn(Maybe.just(createdCustomer));
+        when(createCustomerUseCase.execute(any(Customer.class)))
+                .thenReturn(Single.just(createdCustomer));
+
         when(restMapper.toResponse(createdCustomer)).thenReturn(response);
 
         controller.create(request)
@@ -183,7 +187,7 @@ class CustomerControllerTest {
 
     @Test
     void updateShouldReturnOkWhenCustomerExists() {
-        CreateCustomerRequest request = new CreateCustomerRequest(
+        UpdateCustomerRequest request = new UpdateCustomerRequest(
                 "PERSONAL",
                 "DNI",
                 "12345678",
@@ -251,7 +255,7 @@ class CustomerControllerTest {
 
     @Test
     void updateShouldReturnNotFoundWhenCustomerDoesNotExist() {
-        CreateCustomerRequest request = new CreateCustomerRequest(
+       UpdateCustomerRequest request = new UpdateCustomerRequest(
                 "PERSONAL",
                 "DNI",
                 "00000000",
@@ -298,11 +302,6 @@ class CustomerControllerTest {
 
         controller.delete("1")
                 .test()
-                .assertValue(result -> {
-                    assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-                    assertThat(result.getBody()).isNull();
-                    return true;
-                })
                 .assertComplete()
                 .assertNoErrors();
 
@@ -327,6 +326,7 @@ class CustomerControllerTest {
         verify(getCustomerUseCase).byId("missing");
         verify(deleteCustomerUseCase, never()).execute(anyString());
     }
+
 
     private CreateCustomerRequest request() {
         return new CreateCustomerRequest(

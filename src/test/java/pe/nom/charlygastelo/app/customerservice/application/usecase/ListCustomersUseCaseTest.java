@@ -1,33 +1,36 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
-import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerServicePort;
-import reactor.test.StepVerifier;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ListCustomersUseCaseTest {
 
-    private final CustomerServicePort service = Mockito.mock(CustomerServicePort.class);
-    private final ListCustomersUseCase useCase = new ListCustomersUseCase(service);
+    private final CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
+    private final ListCustomersUseCase useCase = new ListCustomersUseCase(repository);
 
     @Test
     void allShouldReturnCustomers() {
         Customer customer = customer();
 
-        when(service.getAll()).thenReturn(Flowable.just(customer));
+        when(repository.findAll()).thenReturn(Flowable.just(customer));
 
-        StepVerifier.create(useCase.all())
-                .expectNext(customer)
-                .verifyComplete();
+        TestSubscriber<Customer> test = useCase.all().test();
 
-        verify(service).getAll();
+        test.assertValue(customer);
+        test.assertComplete();
+        test.assertNoErrors();
+
+
+        verify(repository).findAll();
     }
 
     private Customer customer() {
