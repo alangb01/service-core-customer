@@ -3,6 +3,7 @@ package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import jakarta.ws.rs.core.Response;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.m
 
 @RestController
 @RequestMapping("/api/customers")
+@RequiredArgsConstructor
 public class CustomerController {
 
     private final CreateCustomerUseCase createCustomerUseCase;
@@ -30,20 +32,6 @@ public class CustomerController {
     private final UpdateCustomerUseCase updateCustomerUseCase;
     private final DeleteCustomerUseCase deleteCustomerUseCase;
     private final RestMapper restMapper;
-
-    public CustomerController(CreateCustomerUseCase createCustomerUseCase,
-                              GetCustomerUseCase getCustomerUseCase,
-                              ListCustomersUseCase listCustomersUseCase,
-                              UpdateCustomerUseCase updateCustomerUseCase,
-                              DeleteCustomerUseCase deleteCustomerUseCase,
-                              RestMapper restMapper) {
-        this.createCustomerUseCase = createCustomerUseCase;
-        this.getCustomerUseCase = getCustomerUseCase;
-        this.listCustomersUseCase = listCustomersUseCase;
-        this.updateCustomerUseCase = updateCustomerUseCase;
-        this.deleteCustomerUseCase = deleteCustomerUseCase;
-        this.restMapper = restMapper;
-    }
 
     @PostMapping
     public Single<ResponseEntity<CustomerResponse>> create(@RequestBody CreateCustomerRequest request) {
@@ -89,7 +77,6 @@ public class CustomerController {
     public @NonNull Single<ResponseEntity<Object>> delete(@PathVariable String id) {
 
         return getCustomerUseCase.byId(id)
-
                 .flatMapSingle(customer ->
                         deleteCustomerUseCase.execute(id)
                                 .toSingleDefault(ResponseEntity.<Void>noContent().build())
