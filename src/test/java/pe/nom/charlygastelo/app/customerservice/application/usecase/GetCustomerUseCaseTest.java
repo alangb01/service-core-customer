@@ -1,5 +1,6 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,7 +23,9 @@ class GetCustomerUseCaseTest {
     void byIdShouldReturnCustomer() {
         Customer customer = customer();
 
+        when(cache.getById("1")).thenReturn(Maybe.empty());
         when(repository.findById("1")).thenReturn(Maybe.just(customer));
+        when(cache.save(customer)).thenReturn(Completable.complete());
 
         useCase.byId("1")
                 .test()
@@ -30,16 +33,18 @@ class GetCustomerUseCaseTest {
                 .assertComplete()
                 .assertNoErrors();
 
+        verify(cache).getById("1");
         verify(repository).findById("1");
+        verify(cache).save(customer);
     }
-
-
 
     @Test
     void byDocumentShouldReturnCustomer() {
         Customer customer = customer();
 
+        when(cache.getByDocument("DNI", "12345678")).thenReturn(Maybe.empty());
         when(repository.findByDocument("DNI", "12345678")).thenReturn(Maybe.just(customer));
+        when(cache.save(customer)).thenReturn(Completable.complete());
 
         useCase.byDocument("DNI", "12345678")
                 .test()
@@ -47,9 +52,10 @@ class GetCustomerUseCaseTest {
                 .assertComplete()
                 .assertNoErrors();
 
+        verify(cache).getByDocument("DNI", "12345678");
         verify(repository).findByDocument("DNI", "12345678");
+        verify(cache).save(customer);
     }
-
 
     private Customer customer() {
         return new Customer(

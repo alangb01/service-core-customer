@@ -22,7 +22,7 @@ import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.d
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 
@@ -70,7 +70,8 @@ public class CustomerController {
         Customer customer = restMapper.toDomain(request);
 
         return updateCustomerUseCase.execute(id, customer)
-                .map(updated -> ResponseEntity.ok(restMapper.toResponse(updated))).toSingle();
+                .map(updated -> ResponseEntity.ok(restMapper.toResponse(updated)))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

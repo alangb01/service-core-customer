@@ -1,6 +1,8 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAlreadyExistsException;
@@ -10,8 +12,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.events.CustomerEventProducer;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CreateCustomerUseCaseTest {
 
@@ -26,44 +27,41 @@ class CreateCustomerUseCaseTest {
         when(repository.checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
                 customer.customerType().toString(),
                 customer.documentType().toString(),
-                customer.documentNumber()))
-                .thenReturn(Single.just(false));
+                customer.documentNumber()
+        )).thenReturn(Single.just(false));
+
         when(repository.save(customer))
                 .thenReturn(Single.just(customer));
 
-        useCase.execute(customer)
-                .test()
-                .assertValue(customer)
-                .assertComplete()
-                .assertNoErrors();
+        when(producer.publishCustomerCreatedEvent(customer))
+                .thenReturn(Completable.complete());
 
-        verify(repository).checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
-                customer.customerType().toString(),
-                customer.documentType().toString(),
-                customer.documentNumber()
-            );
+        TestObserver<Customer> observer = useCase.execute(customer).test();
+
+        observer.assertComplete();
+        observer.assertValue(customer);
+        observer.assertNoErrors();
+
         verify(repository).save(customer);
+        verify(producer).publishCustomerCreatedEvent(customer);
     }
 
     @Test
     void executeShouldReturnErrorWhenCustomerAlreadyExists() {
         Customer customer = customer();
 
-        when(repository.checkByCustomerTypeAndDocumentTypeAndDocumentNumber(customer.customerType().toString(),
+        when(repository.checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
+                customer.customerType().toString(),
                 customer.documentType().toString(),
                 customer.documentNumber()
-        ))
-                .thenReturn(Single.just(true));
+        )).thenReturn(Single.just(true));
 
-        useCase.execute(customer)
-                .test()
-                .assertError(CustomerAlreadyExistsException.class)
-                .assertNotComplete();
+        TestObserver<Customer> observer = useCase.execute(customer).test();
 
-        verify(repository).checkByCustomerTypeAndDocumentTypeAndDocumentNumber(customer.customerType().toString(),
-                customer.documentType().toString(),
-                customer.documentNumber()
-        );
+        observer.assertError(CustomerAlreadyExistsException.class);
+
+        verify(repository, never()).save(any());
+        verify(producer, never()).publishCustomerCreatedEvent(any());
     }
 
     private Customer customer() {
