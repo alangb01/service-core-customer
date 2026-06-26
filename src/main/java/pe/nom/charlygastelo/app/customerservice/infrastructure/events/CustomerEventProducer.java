@@ -1,6 +1,7 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.events;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -11,6 +12,8 @@ import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.events.mapper.CustomerEventMapper;
 
 
+@RequiredArgsConstructor
+@Slf4j
 public class CustomerEventProducer implements CustomerEventPort {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final CustomerEventMapper mapper;
@@ -21,46 +24,40 @@ public class CustomerEventProducer implements CustomerEventPort {
     @Value("${topic.customer-updated}")
     private String accountUpdatedTopic;
 
-    public CustomerEventProducer(KafkaTemplate<String, String> kafkaTemplate,
-                                 CustomerEventMapper mapper) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.mapper = mapper;
-    }
-
     @Override
     public Completable publishCustomerCreatedEvent(Customer customer) {
         var event = mapper.toCustomerCreatedEvent(customer);
 
-        return Completable.create(emitter -> {
-            try {
-                kafkaTemplate.send(
-                        accountCreatedTopic,
-                        customer.id(),
-                        event.toString()
-                );
-            }
-            catch (Exception e) {
-                emitter.onError(e);
-            }
-        });
+        return publish(accountCreatedTopic, customer.id(), event);
     }
 
     @Override
     public Completable publishCustomerUpdatedEvent(Customer customer) {
         var event = mapper.toCustomerCreatedEvent(customer);
 
+        return publish(accountUpdatedTopic, customer.id(), event);
+    }
+
+    private Completable publish(String topic, String key, Object event) {
         return Completable.create(emitter -> {
             try {
                 kafkaTemplate.send(
-                        accountUpdatedTopic,
-                        customer.id(),
+                        topic,
+                        key,
                         event.toString()
-                );
+                ).whenComplete((result, ex) -> {
+                    if (ex == null) {
+                        log.info("Event sent to topic {} with key {}", topic, key);
+                        emitter.onComplete();
+                    } else {
+                        log.error("Error sending event to topic {}: {}", topic, ex.getMessage());
+                        emitter.onError(ex);
+                    }
+                });
             }
             catch (Exception e) {
                 emitter.onError(e);
             }
         });
     }
-
 }

@@ -21,7 +21,7 @@ public class RestMapper {
                 request.lastName(),
                 request.email(),
                 request.phone(),
-                request.active()
+                true
 
         );
     }

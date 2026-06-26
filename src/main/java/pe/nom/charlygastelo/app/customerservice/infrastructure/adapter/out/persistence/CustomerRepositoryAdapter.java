@@ -4,21 +4,19 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
+import lombok.RequiredArgsConstructor;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.ReactiveCustomerRepository;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.mapper.PersistenceMapper;
 
+@RequiredArgsConstructor
 public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
 
     private final ReactiveCustomerRepository repository;
     private final PersistenceMapper mapper;
 
-    public CustomerRepositoryAdapter(ReactiveCustomerRepository repository,
-                                     PersistenceMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
+
 
     @Override
     public Single<Customer> save(Customer customer) {
