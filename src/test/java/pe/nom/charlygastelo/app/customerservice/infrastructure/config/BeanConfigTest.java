@@ -6,7 +6,7 @@ import pe.nom.charlygastelo.app.customerservice.application.usecase.CreateCustom
 import pe.nom.charlygastelo.app.customerservice.application.usecase.GetCustomerUseCase;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.ListCustomersUseCase;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
-import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventPort;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.ReactiveCustomerRepository;
@@ -31,7 +31,7 @@ class BeanConfigTest {
     @Test
     void createCustomerUseCaseShouldReturnCreateCustomerUseCase() {
         CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
-        CustomerEventPort producerPort = Mockito.mock(CustomerEventPort.class);
+        CustomerEventProducerPort producerPort = Mockito.mock(CustomerEventProducerPort.class);
         CreateCustomerUseCase result = beanConfig.createCustomerUseCase(repository, producerPort);
 
         assertThat(result).isNotNull();

@@ -12,8 +12,8 @@ public class PersistenceMapper {
     public CustomerDocument toDocument(Customer domain) {
         CustomerDocument document = new CustomerDocument();
         document.setId(domain.id());
-        document.setCustomerType(domain.customerType().toString());
-        document.setDocumentType(domain.documentType().name());
+        document.setCustomerType(domain.customerType());
+        document.setDocumentType(domain.documentType());
         document.setDocumentNumber(domain.documentNumber());
         document.setName(domain.name());
         document.setLastName(domain.lastName());
@@ -26,8 +26,8 @@ public class PersistenceMapper {
     public Customer toDomain(CustomerDocument d) {
         return new Customer(
                 d.getId(),
-                CustomerType.valueOf(d.getCustomerType()),
-                DocumentType.valueOf(d.getDocumentType()),
+                d.getCustomerType(),
+                d.getDocumentType(),
                 d.getDocumentNumber(),
                 d.getName(),
                 d.getLastName(),

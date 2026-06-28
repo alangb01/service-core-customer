@@ -1,14 +1,14 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.events;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 
 @Component
 public class AvroJsonSerializer {

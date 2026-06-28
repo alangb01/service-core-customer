@@ -3,6 +3,7 @@ package pe.nom.charlygastelo.app.customerservice.infrastructure.events;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.avro.Schema;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
@@ -15,7 +16,8 @@ public class AvroJsonDeserializer {
     public <T extends SpecificRecordBase> T deserialize(
             String json,
             Class<T> eventClass,
-            org.apache.avro.Schema schema) {
+            Schema schema) {
+
         try {
             ByteArrayInputStream inputStream =
                     new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));

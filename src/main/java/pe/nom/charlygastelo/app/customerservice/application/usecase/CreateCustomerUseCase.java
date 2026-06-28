@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAlreadyExistsException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
-import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventPort;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 
 
@@ -14,7 +14,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPo
 public class CreateCustomerUseCase {
 
     private final CustomerRepositoryPort customerRepository;
-    private final CustomerEventPort producer;
+    private final CustomerEventProducerPort producer;
 
     public Single<Customer> execute(Customer customer) {
 
@@ -45,7 +45,7 @@ public class CreateCustomerUseCase {
                 )
 
                 .flatMap(saved ->
-                        producer.publishCustomerCreatedEvent(saved)
+                        producer.publishCustomerCreated(saved)
                                 .doOnComplete(() ->
                                         log.info("CustomerCreatedEvent published for {}", saved.documentNumber())
                                 )

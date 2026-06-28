@@ -1,21 +1,52 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.events.mapper;
 
-
-import org.springframework.stereotype.Component;
-
-import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.avro.events.CustomerCreatedEvent;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.avro.events.CustomerUpdatedEvent;
-import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
+import pe.nom.charlygastelo.app.shared.avro.dto.CustomerCreatedEvent;
+import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
+import pe.nom.charlygastelo.app.shared.avro.dto.CustomerUpdatedEvent;
 
 @Component
 public class CustomerEventMapper {
+
+    public CustomerCreatedEvent toCustomerCreatedEvent(Customer customer) {
+        return CustomerCreatedEvent.newBuilder()
+                .setEventId(UUID.randomUUID().toString())
+                .setEventType("CUSTOMER_CREATED")
+                .setOccurredAt(Instant.now().toString())
+                .setVersion("1.0")
+                .setSource("customer-service")
+                .setCustomerId(value(customer.id()))
+                .setCustomerType(customer.customerType().name())
+                .setDocumentType(customer.documentType().name())
+                .setDocumentNumber(value(customer.documentNumber()))
+                .setLastName(value(customer.lastName()))
+                .setEmail(value(customer.email()))
+                .setPhone(value(customer.phone()))
+                .setActive(customer.active())
+                .build();
+    }
+
+    public CustomerUpdatedEvent toCustomerUpdatedEvent(Customer customer) {
+        return CustomerUpdatedEvent.newBuilder()
+                .setEventId(UUID.randomUUID().toString())
+                .setEventType("CUSTOMER_UPDATED")
+                .setOccurredAt(Instant.now().toString())
+                .setVersion("1.0")
+                .setSource("customer-service")
+                .setCustomerId(value(customer.id()))
+                .setCustomerType(customer.customerType().name())
+                .setDocumentType(customer.documentType().name())
+                .setDocumentNumber(value(customer.documentNumber()))
+                .setLastName(value(customer.lastName()))
+                .setEmail(value(customer.email()))
+                .setPhone(value(customer.phone()))
+                .setActive(customer.active())
+                .build();
+    }
 
     public CustomerResponseEvent toCustomerResponseEvent(
             Customer customer,
@@ -27,22 +58,17 @@ public class CustomerEventMapper {
                 .setOccurredAt(Instant.now().toString())
                 .setVersion("1.0")
                 .setSource("customer-service")
-                .setCorrelationId(correlationId)
+                .setCorrelationId(value(correlationId))
                 .setFound(true)
-                .setCustomerId(customer.id())
-                .setCustomerType(valueOrEmpty(customer.customerType().toString()))
-                .setDocumentType(customer.documentType().toString())
-                .setDocumentNumber(customer.documentNumber())
-                .setName(customer.name())
-                .setLastName(valueOrEmpty(customer.lastName()))
-                .setEmail(customer.email())
-                .setPhone(customer.phone())
+                .setCustomerId(value(customer.id()))
+                .setCustomerType(customer.customerType().name())
+                .setDocumentType(customer.documentType().name())
+                .setDocumentNumber(value(customer.documentNumber()))
+                .setLastName(value(customer.lastName()))
+                .setEmail(value(customer.email()))
+                .setPhone(value(customer.phone()))
                 .setActive(customer.active())
                 .build();
-    }
-
-    private String valueOrEmpty(String value) {
-        return value == null ? "" : value;
     }
 
     public CustomerResponseEvent toCustomerNotFoundEvent(
@@ -55,9 +81,9 @@ public class CustomerEventMapper {
                 .setOccurredAt(Instant.now().toString())
                 .setVersion("1.0")
                 .setSource("customer-service")
-                .setCorrelationId(correlationId)
+                .setCorrelationId(value(correlationId))
                 .setFound(false)
-                .setCustomerId(customerId)
+                .setCustomerId(value(customerId))
                 .setCustomerType("")
                 .setDocumentType("")
                 .setDocumentNumber("")
@@ -69,31 +95,7 @@ public class CustomerEventMapper {
                 .build();
     }
 
-    public Object toCustomerCreatedEvent(Customer domain) {
-        return new CustomerCreatedEvent(
-                domain.id(),
-                domain.customerType().toString(),
-                domain.documentType().toString(),
-                domain.documentNumber(),
-                domain.name(),
-                domain.lastName(),
-                domain.email(),
-                domain.phone(),
-                Instant.now().getEpochSecond()
-        );
-    }
-
-    public Object toCustomerUpdatedEvent(Customer domain) {
-        return new CustomerUpdatedEvent(
-                domain.id(),
-                domain.customerType().toString(),
-                domain.documentType().toString(),
-                domain.documentNumber(),
-                domain.name(),
-                domain.lastName(),
-                domain.email(),
-                domain.phone(),
-                Instant.now().getEpochSecond()
-        );
+    private String value(String value) {
+        return value == null ? "" : value;
     }
 }

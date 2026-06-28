@@ -1,7 +1,5 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.events;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,35 +13,50 @@ import pe.nom.charlygastelo.app.shared.avro.dto.CustomerRequestEvent;
 @RequiredArgsConstructor
 public class CustomerRequestConsumer {
 
+    private final AvroJsonDeserializer deserializer;
     private final CustomerRepositoryPort repository;
-    private final CustomerResponseProducer producer;
+    private final CustomerResponseProducer responseProducer;
     private final CustomerEventMapper mapper;
-    private final AvroJsonDeserializer avroJsonDeserializer;
 
     @KafkaListener(topics = "${topic.customer-request}", groupId = "customer-service")
-    public void consumeCustomerRequest(String message) {
+    public void consume(String message) {
         try {
-            CustomerRequestEvent event =
-                    avroJsonDeserializer.deserialize(
-                            message,
-                            CustomerRequestEvent.class,
-                            CustomerRequestEvent.getClassSchema()
-                    );
+            CustomerRequestEvent event = deserializer.deserialize(
+                    message,
+                    CustomerRequestEvent.class,
+                    CustomerRequestEvent.getClassSchema()
+            );
 
             String correlationId = event.getCorrelationId().toString();
             String customerId = event.getCustomerId().toString();
 
+            log.info("CustomerRequestEvent received. correlationId={}, customerId={}",
+                    correlationId, customerId);
+
             repository.findById(customerId)
-                    .switchIfEmpty(Single.error(new RuntimeException("Customer not found")))
                     .subscribe(
-                            customer -> producer.publish(
+                            customer -> responseProducer.publish(
                                     correlationId,
                                     mapper.toCustomerResponseEvent(customer, correlationId)
                             ),
-                            error -> producer.publish(
-                                    correlationId,
-                                    mapper.toCustomerNotFoundEvent(customerId, correlationId)
-                            )
+                            error -> {
+                                log.error("Error searching customer. correlationId={}, customerId={}, reason={}",
+                                        correlationId, customerId, error.getMessage(), error);
+
+                                responseProducer.publish(
+                                        correlationId,
+                                        mapper.toCustomerNotFoundEvent(customerId, correlationId)
+                                );
+                            },
+                            () -> {
+                                log.warn("Customer not found. correlationId={}, customerId={}",
+                                        correlationId, customerId);
+
+                                responseProducer.publish(
+                                        correlationId,
+                                        mapper.toCustomerNotFoundEvent(customerId, correlationId)
+                                );
+                            }
                     );
 
         } catch (Exception e) {

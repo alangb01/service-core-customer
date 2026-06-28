@@ -54,8 +54,8 @@ class CustomerRepositoryAdapterTest {
 
         CustomerDocument captured = captor.getValue();
         assertThat(captured.getId()).isEqualTo("1");
-        assertThat(captured.getCustomerType()).isEqualTo("PERSONAL");
-        assertThat(captured.getDocumentType()).isEqualTo("DNI");
+        assertThat(captured.getCustomerType()).isEqualTo(CustomerType.PERSONAL);
+        assertThat(captured.getDocumentType()).isEqualTo(DocumentType.DNI);
         assertThat(captured.getDocumentNumber()).isEqualTo("12345678");
         assertThat(captured.getName()).isEqualTo("Juan");
         assertThat(captured.getLastName()).isEqualTo("Perez");
@@ -130,8 +130,8 @@ class CustomerRepositoryAdapterTest {
     private CustomerDocument document() {
         CustomerDocument document = new CustomerDocument();
         document.setId("1");
-        document.setCustomerType("PERSONAL");
-        document.setDocumentType("DNI");
+        document.setCustomerType(CustomerType.PERSONAL);
+        document.setDocumentType(DocumentType.DNI);
         document.setDocumentNumber("12345678");
         document.setName("Juan");
         document.setLastName("Perez");

@@ -33,7 +33,7 @@ class CreateCustomerUseCaseTest {
         when(repository.save(customer))
                 .thenReturn(Single.just(customer));
 
-        when(producer.publishCustomerCreatedEvent(customer))
+        when(producer.publishCustomerCreated(customer))
                 .thenReturn(Completable.complete());
 
         TestObserver<Customer> observer = useCase.execute(customer).test();
@@ -43,7 +43,7 @@ class CreateCustomerUseCaseTest {
         observer.assertNoErrors();
 
         verify(repository).save(customer);
-        verify(producer).publishCustomerCreatedEvent(customer);
+        verify(producer).publishCustomerCreated(customer);
     }
 
     @Test
@@ -61,7 +61,7 @@ class CreateCustomerUseCaseTest {
         observer.assertError(CustomerAlreadyExistsException.class);
 
         verify(repository, never()).save(any());
-        verify(producer, never()).publishCustomerCreatedEvent(any());
+        verify(producer, never()).publishCustomerCreated(any());
     }
 
     private Customer customer() {

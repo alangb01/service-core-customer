@@ -14,7 +14,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.kafka.core.KafkaTemplate;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.*;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
-import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventPort;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.ReactiveCustomerRepository;
@@ -55,13 +55,7 @@ public class BeanConfig {
     }
 
     @Bean
-    public CustomerEventPort customerEventPort(KafkaTemplate<String, String> kafkaTemplate,
-                                               CustomerEventMapper mapper) {
-        return new CustomerEventProducer(kafkaTemplate, mapper);
-    }
-
-    @Bean
-    public CreateCustomerUseCase createCustomerUseCase(CustomerRepositoryPort repository, CustomerEventPort producer) {
+    public CreateCustomerUseCase createCustomerUseCase(CustomerRepositoryPort repository, CustomerEventProducerPort producer) {
         return new CreateCustomerUseCase(repository, producer);
     }
 
