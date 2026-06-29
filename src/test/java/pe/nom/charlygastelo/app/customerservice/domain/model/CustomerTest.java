@@ -13,6 +13,7 @@ class CustomerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan",
                 "Perez",
                 "juan@test.com",

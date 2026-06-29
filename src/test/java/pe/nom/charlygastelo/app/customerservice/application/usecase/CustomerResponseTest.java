@@ -13,6 +13,7 @@ class CustomerResponseTest {
                 "PERSONAL",
                 "DNI",
                 "12345678",
+                "REGULAR",
                 "Juan",
                 "Perez",
                 "juan@test.com",

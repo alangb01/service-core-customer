@@ -4,6 +4,7 @@ public record UpdateCustomerRequest(
         String customerType,
         String documentType,
         String documentNumber,
+        String profileType,
         String name,
         String lastName,
         String email,

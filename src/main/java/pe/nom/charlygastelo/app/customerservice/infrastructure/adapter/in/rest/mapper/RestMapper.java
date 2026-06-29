@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
+import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
@@ -17,6 +18,7 @@ public class RestMapper {
                 CustomerType.valueOf(request.customerType()),
                 DocumentType.valueOf(request.documentType()),
                 request.documentNumber(),
+                ProfileType.REGULAR,
                 request.name(),
                 request.lastName(),
                 request.email(),
@@ -32,6 +34,7 @@ public class RestMapper {
                 CustomerType.valueOf(request.customerType()),
                 DocumentType.valueOf(request.documentType()),
                 request.documentNumber(),
+                ProfileType.valueOf(request.profileType()),
                 request.name(),
                 request.lastName(),
                 request.email(),
@@ -46,6 +49,7 @@ public class RestMapper {
                 domain.customerType().name(),
                 domain.documentType().name(),
                 domain.documentNumber(),
+                domain.profileType().name(),
                 domain.name(),
                 domain.lastName(),
                 domain.email(),

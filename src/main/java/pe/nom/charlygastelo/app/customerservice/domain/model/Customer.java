@@ -5,6 +5,7 @@ public record Customer(
         CustomerType customerType,
         DocumentType documentType,
         String documentNumber,
+        ProfileType profileType,
         String name,
         String lastName,
         String email,
@@ -17,6 +18,7 @@ public record Customer(
                 newData.customerType,       // se actualiza
                 newData.documentType,
                 newData.documentNumber,
+                newData.profileType,
                 newData.name,
                 newData.lastName,
                 newData.email,

@@ -16,6 +16,7 @@ import pe.nom.charlygastelo.app.customerservice.application.usecase.UpdateCustom
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
+import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
@@ -191,6 +192,7 @@ class CustomerControllerTest {
                 "PERSONAL",
                 "DNI",
                 "12345678",
+                "REGULAR",
                 "Juan Updated",
                 "Perez",
                 "juan.updated@test.com",
@@ -203,6 +205,7 @@ class CustomerControllerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan Updated",
                 "Perez",
                 "juan.updated@test.com",
@@ -215,6 +218,7 @@ class CustomerControllerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan Updated",
                 "Perez",
                 "juan.updated@test.com",
@@ -227,6 +231,7 @@ class CustomerControllerTest {
                 "PERSONAL",
                 "DNI",
                 "12345678",
+                "REGULAR",
                 "Juan Updated",
                 "Perez",
                 "juan.updated@test.com",
@@ -259,6 +264,7 @@ class CustomerControllerTest {
                 "PERSONAL",
                 "DNI",
                 "00000000",
+                "REGULAR",
                 "Missing",
                 "Customer",
                 "missing@test.com",
@@ -271,6 +277,7 @@ class CustomerControllerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "00000000",
+                ProfileType.REGULAR,
                 "Missing",
                 "Customer",
                 "missing@test.com",
@@ -347,6 +354,7 @@ class CustomerControllerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan",
                 "Perez",
                 "juan@test.com",
@@ -361,6 +369,7 @@ class CustomerControllerTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan",
                 "Perez",
                 "juan@test.com",
@@ -375,6 +384,7 @@ class CustomerControllerTest {
                 "PERSONAL",
                 "DNI",
                 "12345678",
+                "REGULAR",
                 "Juan",
                 "Perez",
                 "juan@test.com",

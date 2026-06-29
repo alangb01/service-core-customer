@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
+import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.mapper.PersistenceMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -119,6 +120,7 @@ class CustomerRepositoryAdapterTest {
                 CustomerType.PERSONAL,
                 DocumentType.DNI,
                 "12345678",
+                ProfileType.REGULAR,
                 "Juan",
                 "Perez",
                 "juan@test.com",

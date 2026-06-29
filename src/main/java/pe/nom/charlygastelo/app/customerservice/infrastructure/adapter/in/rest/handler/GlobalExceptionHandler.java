@@ -64,7 +64,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             CustomerRepositoryException.class,
             CustomerCacheException.class,
-            CustomerEventProducerException.class
+            CustomerEventProducerException.class,
+            RuntimeException.class
     })
     public ResponseEntity<ErrorResponse> handleInfrastructureErrors(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
