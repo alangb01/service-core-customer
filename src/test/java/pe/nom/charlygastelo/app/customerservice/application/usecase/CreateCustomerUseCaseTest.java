@@ -9,6 +9,7 @@ import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAl
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
+import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.events.CustomerEventProducer;
 
@@ -18,11 +19,16 @@ class CreateCustomerUseCaseTest {
 
     private final CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
     private final CustomerEventProducer producer = Mockito.mock(CustomerEventProducer.class);
-    private final CreateCustomerUseCase useCase = new CreateCustomerUseCase(repository,producer);
+    private final CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
+    private final CreateCustomerUseCase useCase = new CreateCustomerUseCase(repository,producer, cache);
 
     @Test
     void executeShouldCreateCustomerWhenCustomerDoesNotExist() {
         Customer customer = customer();
+
+        when(cache.save(any())).thenReturn(Completable.complete());
+        when(cache.delete(anyString())).thenReturn(Completable.complete());
+
 
         when(repository.checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
                 customer.customerType().toString(),

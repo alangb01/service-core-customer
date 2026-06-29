@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: Customer Service API
+  version: v3
+  description: Customer management with authentication and extended features - Project III.
+
+paths:
+  /customers/register:
+    post:
+      summary: Register a new customer with authentication data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRegisterRequest'
+      responses:
+        '201':
+          description: Customer registered
+
+  /customers/{id}/status:
+    get:
+      summary: Get customer status (active, blocked, overdue-debt)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerStatusResponse'
+
+components:
+  schemas:
+    CustomerRegisterRequest:
+      type: object
+      required: [fullName, documentType, documentNumber, email]
+      properties:
+        fullName: { type: string }
+        documentType: { $ref: '#/components/schemas/DocumentType' }
+        documentNumber: { type: string }
+        email: { type: string }
+        roles:
+          type: array
+          items: { type: string }
+
+    CustomerStatusResponse:
+      type: object
+      properties:
+        customerId: { type: string }
+        active: { type: boolean }
+        hasOverdueDebt: { type: boolean }
+        jwtEnabled: { type: boolean }

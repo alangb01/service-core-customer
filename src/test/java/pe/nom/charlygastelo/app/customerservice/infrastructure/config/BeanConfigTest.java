@@ -32,7 +32,8 @@ class BeanConfigTest {
     void createCustomerUseCaseShouldReturnCreateCustomerUseCase() {
         CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
         CustomerEventProducerPort producerPort = Mockito.mock(CustomerEventProducerPort.class);
-        CreateCustomerUseCase result = beanConfig.createCustomerUseCase(repository, producerPort);
+        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
+        CreateCustomerUseCase result = beanConfig.createCustomerUseCase(repository, producerPort, cache);
 
         assertThat(result).isNotNull();
         assertThat(result).isInstanceOf(CreateCustomerUseCase.class);
@@ -51,8 +52,9 @@ class BeanConfigTest {
     @Test
     void listCustomersUseCaseShouldReturnListCustomersUseCase() {
         CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
+        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
 
-        ListCustomersUseCase result = beanConfig.listCustomersUseCase(repository);
+        ListCustomersUseCase result = beanConfig.listCustomersUseCase(repository, cache);
 
         assertThat(result).isNotNull();
         assertThat(result).isInstanceOf(ListCustomersUseCase.class);

@@ -26,6 +26,9 @@ public class CustomerEventProducer implements CustomerEventProducerPort {
     @Value("${topic.customer-updated}")
     private String customerUpdatedTopic;
 
+    @Value("${topic.customer-deleted}")
+    private String customerDeletedTopic;
+
     @Override
     public Completable publishCustomerCreated(Customer customer) {
         return publish(customerCreatedTopic, customer.id(), mapper.toCustomerCreatedEvent(customer));
@@ -36,26 +39,49 @@ public class CustomerEventProducer implements CustomerEventProducerPort {
         return publish(customerUpdatedTopic, customer.id(), mapper.toCustomerUpdatedEvent(customer));
     }
 
+    @Override
+    public Completable publishCustomerDeleted(String customerId) {
+        return publish(customerDeletedTopic, customerId, mapper.toCustomerDeletedEvent(customerId));
+    }
+
+
     private Completable publish(String topic, String key, SpecificRecordBase event) {
         return Completable.create(emitter -> {
             try {
+
+                log.info("[CUSTOMER-EVENT] Preparing event. topic={}, key={}, eventType={}",
+                        topic, key, event.getClass().getSimpleName());
+
+                log.debug("[CUSTOMER-EVENT] Serializing event. key={}, event={}",
+                        key, event);
+
                 String payload = serializer.serialize(event);
+
+                log.debug("[CUSTOMER-EVENT] Payload serialized successfully. key={}, payload={}",
+                        key, payload);
 
                 kafkaTemplate.send(topic, key, payload)
                         .whenComplete((result, error) -> {
                             if (error != null) {
-                                log.error("Error publishing customer event. topic={}, key={}, reason={}",
+                                log.error("[CUSTOMER-EVENT] Error sending event. topic={}, key={}, reason={}",
                                         topic, key, error.getMessage(), error);
                                 emitter.onError(error);
                                 return;
                             }
 
-                            log.info("Customer event published successfully. topic={}, key={}",
-                                    topic, key);
+                            log.info("[CUSTOMER-EVENT] Event sent successfully. topic={}, key={}, partition={}, offset={}",
+                                    topic,
+                                    key,
+                                    result.getRecordMetadata().partition(),
+                                    result.getRecordMetadata().offset()
+                            );
+
                             emitter.onComplete();
                         });
 
             } catch (Exception e) {
+                log.error("[CUSTOMER-EVENT] Unexpected error serializing or sending event. topic={}, key={}, reason={}",
+                        topic, key, e.getMessage(), e);
                 emitter.onError(e);
             }
         });

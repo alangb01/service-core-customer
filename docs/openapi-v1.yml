@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: Customer Service API
+  version: v1
+  description: Customer management for banking system - Project I.
+
+paths:
+  /customers:
+    get:
+      summary: List all customers
+      responses:
+        '200':
+          description: List of customers
+    post:
+      summary: Create customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreateRequest'
+      responses:
+        '201':
+          description: Customer created
+
+  /customers/{id}:
+    get:
+      summary: Get customer by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Customer found
+    put:
+      summary: Update customer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Customer updated
+    delete:
+      summary: Delete customer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '204':
+          description: Customer deleted
+
+  /customers/search:
+    get:
+      summary: Search customer by document
+      parameters:
+        - in: query
+          name: documentType
+          schema: { type: string }
+        - in: query
+          name: documentNumber
+          schema: { type: string }
+      responses:
+        '200':
+          description: Customer found
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id: { type: string }
+        fullName: { type: string }
+        customerType: { $ref: '#/components/schemas/CustomerType' }
+        documentType: { $ref: '#/components/schemas/DocumentType' }
+        documentNumber: { type: string }
+        active: { type: boolean }
+
+    CustomerCreateRequest:
+      type: object
+      required: [fullName, customerType, documentType, documentNumber]
+      properties:
+        fullName: { type: string }
+        customerType: { $ref: '#/components/schemas/CustomerType' }
+        documentType: { $ref: '#/components/schemas/DocumentType' }
+        documentNumber: { type: string }
+
+    CustomerType:
+      type: string
+      enum: [PERSONAL, BUSINESS]
+
+    DocumentType:
+      type: string
+      enum: [DNI, CEX, PASSPORT]

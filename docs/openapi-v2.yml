@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: Customer Service API
+  version: v2
+  description: Customer management with extended profiles - Project II.
+
+paths:
+  /customers/{id}/profile:
+    get:
+      summary: Get customer profile (STANDARD, VIP, PYME)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfileResponse'
+
+components:
+  schemas:
+    CustomerProfileResponse:
+      type: object
+      properties:
+        customerId: { type: string }
+        profile: { $ref: '#/components/schemas/CustomerProfile' }
+
+    CustomerProfile:
+      type: string
+      enum: [STANDARD, VIP, PYME]

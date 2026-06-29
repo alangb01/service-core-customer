@@ -20,23 +20,35 @@ public class CustomerResponseProducer {
 
     public void publish(String correlationId, CustomerResponseEvent event) {
         try {
+            log.info("[CUSTOMER-RESPONSE] Preparing to publish event. correlationId={}, found={}",
+                    correlationId, event.getFound());
+
+            log.debug("[CUSTOMER-RESPONSE] Serializing CustomerResponseEvent. correlationId={}, event={}",
+                    correlationId, event);
+
             String payload = serializer.serialize(event);
+
+            log.debug("[CUSTOMER-RESPONSE] Payload serialized successfully. correlationId={}, payload={}",
+                    correlationId, payload);
 
             kafkaTemplate.send(customerResponseTopic, correlationId, payload)
                     .whenComplete((result, error) -> {
                         if (error != null) {
-                            log.error("Error publishing CustomerResponseEvent. correlationId={}, reason={}",
+                            log.error("[CUSTOMER-RESPONSE] Error sending event. correlationId={}, reason={}",
                                     correlationId, error.getMessage(), error);
                             return;
                         }
 
-                        log.info("CustomerResponseEvent published. correlationId={}, found={}",
-                                correlationId, event.getFound());
+                        log.info("[CUSTOMER-RESPONSE] Event published successfully. correlationId={}, found={}, partition={}, offset={}",
+                                correlationId,
+                                event.getFound(),
+                                result.getRecordMetadata().partition(),
+                                result.getRecordMetadata().offset());
                     });
 
         } catch (Exception e) {
-            log.error("Error serializing CustomerResponseEvent. correlationId={}",
-                    correlationId, e);
+            log.error("[CUSTOMER-RESPONSE] Error serializing CustomerResponseEvent. correlationId={}, reason={}",
+                    correlationId, e.getMessage(), e);
         }
     }
 }

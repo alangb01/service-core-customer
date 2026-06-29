@@ -20,7 +20,11 @@ public class CustomerRequestConsumer {
 
     @KafkaListener(topics = "${topic.customer-request}", groupId = "customer-service")
     public void consume(String message) {
+        log.info("[CUSTOMER-REQUEST] Message received from Kafka.");
+
         try {
+            log.debug("[CUSTOMER-REQUEST] Deserializing CustomerRequestEvent. rawMessage={}", message);
+
             CustomerRequestEvent event = deserializer.deserialize(
                     message,
                     CustomerRequestEvent.class,
@@ -30,37 +34,51 @@ public class CustomerRequestConsumer {
             String correlationId = event.getCorrelationId().toString();
             String customerId = event.getCustomerId().toString();
 
-            log.info("CustomerRequestEvent received. correlationId={}, customerId={}",
+            log.info("[CUSTOMER-REQUEST] Event deserialized successfully. correlationId={}, customerId={}",
                     correlationId, customerId);
 
             repository.findById(customerId)
                     .subscribe(
-                            customer -> responseProducer.publish(
-                                    correlationId,
-                                    mapper.toCustomerResponseEvent(customer, correlationId)
-                            ),
+                            customer -> {
+                                log.info("[CUSTOMER-REQUEST] Customer found. correlationId={}, customerId={}",
+                                        correlationId, customerId);
+
+                                responseProducer.publish(
+                                        correlationId,
+                                        mapper.toCustomerResponseEvent(customer, correlationId)
+                                );
+
+                                log.info("[CUSTOMER-RESPONSE] CustomerResponseEvent published. correlationId={}, customerId={}",
+                                        correlationId, customerId);
+                            },
                             error -> {
-                                log.error("Error searching customer. correlationId={}, customerId={}, reason={}",
+                                log.error("[CUSTOMER-REQUEST] Error searching customer. correlationId={}, customerId={}, reason={}",
                                         correlationId, customerId, error.getMessage(), error);
 
                                 responseProducer.publish(
                                         correlationId,
                                         mapper.toCustomerNotFoundEvent(customerId, correlationId)
                                 );
+
+                                log.warn("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published due to error. correlationId={}, customerId={}",
+                                        correlationId, customerId);
                             },
                             () -> {
-                                log.warn("Customer not found. correlationId={}, customerId={}",
+                                log.warn("[CUSTOMER-REQUEST] Customer not found. correlationId={}, customerId={}",
                                         correlationId, customerId);
 
                                 responseProducer.publish(
                                         correlationId,
                                         mapper.toCustomerNotFoundEvent(customerId, correlationId)
                                 );
+
+                                log.info("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published. correlationId={}, customerId={}",
+                                        correlationId, customerId);
                             }
                     );
 
         } catch (Exception e) {
-            log.error("Error processing CustomerRequestEvent", e);
+            log.error("[CUSTOMER-REQUEST] Fatal error processing CustomerRequestEvent. reason={}", e.getMessage(), e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,53 +18,42 @@ public class GetCustomerUseCase {
     private final CustomerCachePort cache;
 
     public Maybe<Customer> byId(String id) {
+        log.info("[CUSTOMER-GET] Searching customer by ID {}", id);
 
-        log.info("Searching customer by ID {}", id);
-
-        return cache.getById(id)
-                .doOnSuccess(c -> log.info("Customer {} found in cache", id))
-                .doOnComplete(() -> log.debug("Customer {} not found in cache", id))
-
+        return safeCacheGetById(id)
                 .switchIfEmpty(
                         customerRepository.findById(id)
-                                .doOnSuccess(c -> log.info("Customer {} found in MongoDB", id))
-                                .doOnError(e -> log.error("Error accessing MongoDB for {}", id, e))
                                 .flatMap(customer ->
-                                        cache.save(customer)
-                                                .doOnComplete(() -> log.debug("Customer {} cached", id))
+                                        safeCacheSave(customer)
                                                 .andThen(Maybe.just(customer))
                                 )
+                                .onErrorResumeNext(e -> {
+                                    log.error("[CUSTOMER-GET] Mongo error retrieving customer {}: {}",
+                                            id, e.getMessage(), e);
+                                    return Maybe.error(new CustomerRepositoryException("Error accessing Mongo", e));
+                                })
                 )
-
                 .switchIfEmpty(
                         Maybe.error(new CustomerNotFoundException("Customer not found: " + id))
                 );
     }
 
     public Maybe<Customer> byDocument(String type, String number) {
+        log.info("[CUSTOMER-GET] Searching customer by document {} {}", type, number);
 
-        log.info("Searching customer by document {} {}", type, number);
-
-        return cache.getByDocument(type, number)
-                .doOnSuccess(c -> log.info("Customer {}-{} found in cache", type, number))
-                .doOnComplete(() -> log.debug("Customer {}-{} not found in cache", type, number))
-
+        return safeCacheGetByDocument(type, number)
                 .switchIfEmpty(
                         customerRepository.findByDocument(type, number)
-                                .doOnSuccess(c -> log.info("Customer {}-{} found in MongoDB", type, number))
-                                .doOnError(e -> log.error("Error accessing MongoDB for {}-{}", type, number, e))
                                 .flatMap(customer ->
-                                        cache.save(customer)
-                                                .doOnComplete(() -> log.debug("Customer {}-{} cached", type, number))
+                                        safeCacheSave(customer)
                                                 .andThen(Maybe.just(customer))
                                 )
+                                .onErrorResumeNext(e -> {
+                                    log.error("[CUSTOMER-GET] Mongo error retrieving customer {}-{}: {}",
+                                            type, number, e.getMessage(), e);
+                                    return Maybe.error(new CustomerRepositoryException("Error accessing Mongo", e));
+                                })
                 )
-
-                .onErrorResumeNext(e -> {
-                    log.error("Technical error retrieving customer {}-{}: {}", type, number, e.getMessage(), e);
-                    return Maybe.error(new CustomerRepositoryException("Error accessing Mongo", e));
-                })
-
                 .switchIfEmpty(
                         Maybe.error(new CustomerNotFoundException(
                                 "Customer not found with " + type + " " + number
@@ -71,4 +61,55 @@ public class GetCustomerUseCase {
                 );
     }
 
+    private Maybe<Customer> safeCacheGetById(String id) {
+        Maybe<Customer> op = cache.getById(id);
+
+        if (op == null) {
+            log.warn("[CUSTOMER-GET] Cache getById returned null. customerId={}", id);
+            return Maybe.empty();
+        }
+
+        return op
+                .doOnSuccess(c ->
+                        log.info("[CUSTOMER-GET] Customer {} found in cache", id))
+                .onErrorComplete(e -> {
+                    log.warn("[CUSTOMER-GET] Cache getById failed. Falling back to MongoDB. customerId={}, reason={}",
+                            id, e.getMessage());
+                    return true;
+                });
+    }
+
+    private Maybe<Customer> safeCacheGetByDocument(String type, String number) {
+        Maybe<Customer> op = cache.getByDocument(type, number);
+
+        if (op == null) {
+            log.warn("[CUSTOMER-GET] Cache getByDocument returned null. documentType={}, documentNumber={}",
+                    type, number);
+            return Maybe.empty();
+        }
+
+        return op
+                .doOnSuccess(c ->
+                        log.info("[CUSTOMER-GET] Customer {}-{} found in cache", type, number))
+                .onErrorComplete(e -> {
+                    log.warn("[CUSTOMER-GET] Cache getByDocument failed. Falling back to MongoDB. documentType={}, documentNumber={}, reason={}",
+                            type, number, e.getMessage());
+                    return true;
+                });
+    }
+
+    private Completable safeCacheSave(Customer customer) {
+        Completable op = cache.save(customer);
+
+        if (op == null) {
+            log.warn("[CUSTOMER-GET] Cache save returned null. customerId={}", customer.id());
+            return Completable.complete();
+        }
+
+        return op.onErrorComplete(e -> {
+            log.warn("[CUSTOMER-GET] Cache save failed. Continuing without cache. customerId={}, reason={}",
+                    customer.id(), e.getMessage());
+            return true;
+        });
+    }
 }

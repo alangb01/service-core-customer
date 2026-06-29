@@ -55,8 +55,8 @@ public class BeanConfig {
     }
 
     @Bean
-    public CreateCustomerUseCase createCustomerUseCase(CustomerRepositoryPort repository, CustomerEventProducerPort producer) {
-        return new CreateCustomerUseCase(repository, producer);
+    public CreateCustomerUseCase createCustomerUseCase(CustomerRepositoryPort repository, CustomerEventProducerPort producer, CustomerCachePort cache) {
+        return new CreateCustomerUseCase(repository, producer, cache);
     }
 
     @Bean
@@ -65,17 +65,17 @@ public class BeanConfig {
     }
 
     @Bean
-    public ListCustomersUseCase listCustomersUseCase(CustomerRepositoryPort repository) {
-        return new ListCustomersUseCase(repository);
+    public ListCustomersUseCase listCustomersUseCase(CustomerRepositoryPort repository, CustomerCachePort cache) {
+        return new ListCustomersUseCase(repository, cache);
     }
 
     @Bean
-    public UpdateCustomerUseCase updateCustomerUseCase(CustomerRepositoryPort repository) {
-        return new UpdateCustomerUseCase(repository);
+    public UpdateCustomerUseCase updateCustomerUseCase(CustomerRepositoryPort repository, CustomerCachePort cache, CustomerEventProducer producer) {
+        return new UpdateCustomerUseCase(repository, cache, producer);
     }
 
     @Bean
-    public DeleteCustomerUseCase deleteCustomerUseCase(CustomerRepositoryPort repository, CustomerCachePort cache) {
-        return new DeleteCustomerUseCase(repository, cache);
+    public DeleteCustomerUseCase deleteCustomerUseCase(CustomerRepositoryPort repository, CustomerCachePort cache, CustomerEventProducer producer) {
+        return new DeleteCustomerUseCase(repository, cache, producer);
     }
 }

@@ -8,4 +8,6 @@ public interface CustomerEventProducerPort {
     Completable publishCustomerCreated(Customer customer);
 
     Completable publishCustomerUpdated(Customer customer);
+
+    Completable publishCustomerDeleted(String customerId);
 }

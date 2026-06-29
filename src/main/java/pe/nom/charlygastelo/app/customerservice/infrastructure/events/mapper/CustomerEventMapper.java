@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerCreatedEvent;
+import pe.nom.charlygastelo.app.shared.avro.dto.CustomerDeletedEvent;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerUpdatedEvent;
 
@@ -23,6 +24,7 @@ public class CustomerEventMapper {
                 .setCustomerType(customer.customerType().name())
                 .setDocumentType(customer.documentType().name())
                 .setDocumentNumber(value(customer.documentNumber()))
+                .setName(value(customer.name()))
                 .setLastName(value(customer.lastName()))
                 .setEmail(value(customer.email()))
                 .setPhone(value(customer.phone()))
@@ -41,12 +43,25 @@ public class CustomerEventMapper {
                 .setCustomerType(customer.customerType().name())
                 .setDocumentType(customer.documentType().name())
                 .setDocumentNumber(value(customer.documentNumber()))
+                .setName(value(customer.name()))
                 .setLastName(value(customer.lastName()))
                 .setEmail(value(customer.email()))
                 .setPhone(value(customer.phone()))
                 .setActive(customer.active())
                 .build();
     }
+
+    public CustomerDeletedEvent toCustomerDeletedEvent(String customerId) {
+        return CustomerDeletedEvent.newBuilder()
+                .setEventId(UUID.randomUUID().toString())
+                .setEventType("CUSTOMER_DELETED")
+                .setOccurredAt(Instant.now().toString())
+                .setVersion("1.0")
+                .setSource("customer-service")
+                .setCustomerId(value(customerId))
+                .build();
+    }
+
 
     public CustomerResponseEvent toCustomerResponseEvent(
             Customer customer,
@@ -64,6 +79,7 @@ public class CustomerEventMapper {
                 .setCustomerType(customer.customerType().name())
                 .setDocumentType(customer.documentType().name())
                 .setDocumentNumber(value(customer.documentNumber()))
+                .setName(value(customer.name()))
                 .setLastName(value(customer.lastName()))
                 .setEmail(value(customer.email()))
                 .setPhone(value(customer.phone()))
