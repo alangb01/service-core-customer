@@ -1,8 +1,6 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Completable;
-import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.CreateCustomerUseCase;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.DeleteCustomerUseCase;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.GetCustomerUseCase;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.ListCustomersUseCase;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.UpdateCustomerUseCase;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.*;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerCreateRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerUpdateRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 @RestController
@@ -34,7 +28,7 @@ public class CustomerController {
     private final RestMapper restMapper;
 
     @PostMapping
-    public Single<ResponseEntity<CustomerResponse>> create(@RequestBody CreateCustomerRequest request) {
+    public Single<ResponseEntity<CustomerResponse>> create(@RequestBody CustomerCreateRequest request) {
         Customer customer = restMapper.toDomain(request);
 
         return createCustomerUseCase.execute(customer)
@@ -66,7 +60,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public Single<ResponseEntity<CustomerResponse>> update(@PathVariable String id,
-                                                           @RequestBody UpdateCustomerRequest request) {
+                                                           @RequestBody CustomerUpdateRequest request) {
         Customer customer = restMapper.toDomain(request);
 
         return updateCustomerUseCase.execute(id, customer)

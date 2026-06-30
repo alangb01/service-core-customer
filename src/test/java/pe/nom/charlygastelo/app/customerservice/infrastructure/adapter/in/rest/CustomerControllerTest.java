@@ -17,9 +17,9 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerCreateRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerUpdateRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +50,7 @@ class CustomerControllerTest {
 
     @Test
     void createShouldReturnCustomerResponse() {
-        CreateCustomerRequest request = request();
+        CustomerCreateRequest request = request();
         Customer customerToCreate = customerWithoutId();
         Customer createdCustomer = customer();
         CustomerResponse response = response();
@@ -188,7 +188,7 @@ class CustomerControllerTest {
 
     @Test
     void updateShouldReturnOkWhenCustomerExists() {
-        UpdateCustomerRequest request = new UpdateCustomerRequest(
+        CustomerUpdateRequest request = new CustomerUpdateRequest(
                 "PERSONAL",
                 "DNI",
                 "12345678",
@@ -260,7 +260,7 @@ class CustomerControllerTest {
 
     @Test
     void updateShouldReturnNotFoundWhenCustomerDoesNotExist() {
-       UpdateCustomerRequest request = new UpdateCustomerRequest(
+       CustomerUpdateRequest request = new CustomerUpdateRequest(
                 "PERSONAL",
                 "DNI",
                 "00000000",
@@ -335,8 +335,8 @@ class CustomerControllerTest {
     }
 
 
-    private CreateCustomerRequest request() {
-        return new CreateCustomerRequest(
+    private CustomerCreateRequest request() {
+        return new CustomerCreateRequest(
                 "PERSONAL",
                 "DNI",
                 "12345678",

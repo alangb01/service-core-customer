@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: Customer Service API
+  version: v1
+  description: API for managing bank customers (personal, business, VIP, PYME, Yanki users)
+
+servers:
+  - url: http://localhost:8081
+
+tags:
+  - name: Customers
+    description: Customer management operations
+
+security:
+  - bearerAuth: []
+
+paths:
+  /customers/document:
+    get:
+      tags: [ Customers ]
+      summary: Get all customers
+      parameters:
+        - in: query
+          name: documentType
+          required: true
+          schema: { type: string }
+        - in: query
+          name: documentNumber
+          required: true
+          schema: { type: string }
+
+      responses:
+        '200':
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponse'
+
+
+  /customers:
+    get:
+      tags: [Customers]
+      summary: Get all customers
+
+      responses:
+        '200':
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponse'
+
+    post:
+      tags: [Customers]
+      summary: Create a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreateRequest'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+  /customers/{id}:
+    get:
+      tags: [Customers]
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          description: Customer not found
+
+    put:
+      tags: [Customers]
+      summary: Update customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdateRequest'
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+
+    delete:
+      tags: [Customers]
+      summary: Delete customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Customer deleted
+
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        documentType:
+          type: string
+          enum: [DNI, RUC, PASSPORT]
+        documentNumber:
+          type: string
+        customerType:
+          type: string
+          enum: [ PERSONAL, BUSINESS ]
+        profile:
+          type: string
+          enum: [ REGULAR, VIP, PYME ]
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+
+        createdAt:
+          type: string
+          format: date-time
+
+    CustomerCreateRequest:
+      type: object
+      required:
+        - documentType
+        - documentNumber
+        - fullName
+        - customerType
+      properties:
+        documentType:
+          type: string
+        documentNumber:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        customerType:
+          type: string
+        profile:
+          type: string
+
+    CustomerUpdateRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        profile:
+          type: string

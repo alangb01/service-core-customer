@@ -6,13 +6,13 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CreateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerCreateRequest;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerResponse;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.UpdateCustomerRequest;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto.CustomerUpdateRequest;
 
 @Component
 public class RestMapper {
-    public Customer toDomain(CreateCustomerRequest request) {
+    public Customer toDomain(CustomerCreateRequest request) {
         return new Customer(
                 null,
                 CustomerType.valueOf(request.customerType()),
@@ -28,7 +28,7 @@ public class RestMapper {
         );
     }
 
-    public Customer toDomain(UpdateCustomerRequest request) {
+    public Customer toDomain(CustomerUpdateRequest request) {
         return new Customer(
                 null,
                 CustomerType.valueOf(request.customerType()),

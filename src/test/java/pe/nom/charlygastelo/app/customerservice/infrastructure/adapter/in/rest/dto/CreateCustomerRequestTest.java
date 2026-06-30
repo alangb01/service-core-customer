@@ -8,7 +8,7 @@ class CreateCustomerRequestTest {
 
     @Test
     void shouldCreateRequestRecord() {
-        CreateCustomerRequest request = new CreateCustomerRequest(
+        CustomerCreateRequest request = new CustomerCreateRequest(
                 "PERSONAL",
                 "DNI",
                 "12345678",
