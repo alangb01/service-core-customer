@@ -1,6 +1,7 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.dto;
 
 import org.junit.jupiter.api.Test;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -5,6 +5,10 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
+import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
+import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
+
+import javax.print.Doc;
 
 public interface CustomerRepositoryPort {
 
@@ -12,7 +16,7 @@ public interface CustomerRepositoryPort {
 
     Maybe<Customer> findById(String id);
 
-    Maybe<Customer> findByDocument(String documentType, String documentNumber);
+    Maybe<Customer> findByDocument(DocumentType documentType, String documentNumber);
 
     Flowable<Customer> findAll();
 
@@ -21,8 +25,8 @@ public interface CustomerRepositoryPort {
     Single<Boolean> existsById(String id);
 
     Single<Boolean> checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
-            String customerType,
-            String documentType,
+            CustomerType customerType,
+            DocumentType documentType,
             String documentNumber
     );
 }

@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAlreadyExistsException;
+import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerAlreadyExistsException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
@@ -15,8 +15,8 @@ import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPo
 public class CreateCustomerUseCase {
 
     private final CustomerRepositoryPort customerRepository;
-    private final CustomerEventProducerPort producer;
     private final CustomerCachePort cache;
+    private final CustomerEventProducerPort producer;
 
     public Single<Customer> execute(Customer customer) {
         log.info("[CUSTOMER-CREATE] Starting creation process. documentNumber={}",
@@ -24,8 +24,8 @@ public class CreateCustomerUseCase {
 
         return customerRepository
                 .checkByCustomerTypeAndDocumentTypeAndDocumentNumber(
-                        customer.customerType().toString(),
-                        customer.documentType().toString(),
+                        customer.customerType(),
+                        customer.documentType(),
                         customer.documentNumber()
                 )
                 .flatMap(exists -> {

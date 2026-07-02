@@ -5,14 +5,14 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerAlreadyExistsException;
+import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerAlreadyExistsException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.events.CustomerEventProducer;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.event.CustomerEventProducer;
 
 import static org.mockito.Mockito.*;
 

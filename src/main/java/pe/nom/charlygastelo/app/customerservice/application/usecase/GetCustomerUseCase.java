@@ -4,11 +4,12 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pe.nom.charlygastelo.app.customerservice.application.exception.CustomerNotFoundException;
+import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerNotFoundException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
+import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.exception.CustomerRepositoryException;
+import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.exception.CustomerRepositoryException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -41,9 +42,11 @@ public class GetCustomerUseCase {
     public Maybe<Customer> byDocument(String type, String number) {
         log.info("[CUSTOMER-GET] Searching customer by document {} {}", type, number);
 
+        DocumentType documentType = DocumentType.valueOf(type.toUpperCase());
+
         return safeCacheGetByDocument(type, number)
                 .switchIfEmpty(
-                        customerRepository.findByDocument(type, number)
+                        customerRepository.findByDocument(documentType, number)
                                 .flatMap(customer ->
                                         safeCacheSave(customer)
                                                 .andThen(Maybe.just(customer))
