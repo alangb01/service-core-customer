@@ -44,7 +44,7 @@ class GetCustomerUseCaseTest {
         Customer customer = customer();
 
         when(cache.getByDocument("DNI", "12345678")).thenReturn(Maybe.empty());
-        when(repository.findByDocument("DNI", "12345678")).thenReturn(Maybe.just(customer));
+        when(repository.findByDocument( DocumentType.DNI, "12345678")).thenReturn(Maybe.just(customer));
         when(cache.save(customer)).thenReturn(Completable.complete());
 
         useCase.byDocument("DNI", "12345678")
@@ -54,7 +54,7 @@ class GetCustomerUseCaseTest {
                 .assertNoErrors();
 
         verify(cache).getByDocument("DNI", "12345678");
-        verify(repository).findByDocument("DNI", "12345678");
+        verify(repository).findByDocument(DocumentType.DNI, "12345678");
         verify(cache).save(customer);
     }
 

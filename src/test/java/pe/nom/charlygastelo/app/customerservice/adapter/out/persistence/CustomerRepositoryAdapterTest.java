@@ -82,16 +82,16 @@ class CustomerRepositoryAdapterTest {
     void findByDocumentShouldReturnMappedDomain() {
         CustomerDocument document = document();
 
-        when(repository.findByDocumentTypeAndDocumentNumber("DNI", "12345678"))
+        when(repository.findByDocumentTypeAndDocumentNumber(DocumentType.DNI, "12345678"))
                 .thenReturn(Mono.just(document));
 
-        adapter.findByDocument("DNI", "12345678")
+        adapter.findByDocument(DocumentType.DNI, "12345678")
                 .test()
                 .assertValue(customer())
                 .assertComplete()
                 .assertNoErrors();
 
-        verify(repository).findByDocumentTypeAndDocumentNumber("DNI", "12345678");
+        verify(repository).findByDocumentTypeAndDocumentNumber(DocumentType.DNI, "12345678");
     }
 
 
