@@ -1,20 +1,19 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.in.rest;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
-import pe.nom.charlygastelo.app.customerservice.application.usecase.*;
-import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerCreateRequest;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerResponse;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerUpdateRequest;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.mapper.RestMapper;
+import pe.nom.charlygastelo.app.customerservice.application.usecase.*;
+import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 
 @RestController
 @RequestMapping("/customers")

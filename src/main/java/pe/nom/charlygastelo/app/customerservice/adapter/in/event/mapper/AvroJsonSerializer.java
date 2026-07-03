@@ -2,7 +2,6 @@ package pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
-
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.io.JsonEncoder;

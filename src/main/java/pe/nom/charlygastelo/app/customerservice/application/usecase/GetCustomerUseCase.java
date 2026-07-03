@@ -4,12 +4,12 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.exception.CustomerRepositoryException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerNotFoundException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.exception.CustomerRepositoryException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -95,7 +95,8 @@ public class GetCustomerUseCase {
                 .doOnSuccess(c ->
                         log.info("[CUSTOMER-GET] Customer {}-{} found in cache", type, number))
                 .onErrorComplete(e -> {
-                    log.warn("[CUSTOMER-GET] Cache getByDocument failed. Falling back to MongoDB. documentType={}, documentNumber={}, reason={}",
+                    log.warn("[CUSTOMER-GET] Cache getByDocument failed. Falling back to MongoDB. " +
+                                    "documentType={}, documentNumber={}, reason={}",
                             type, number, e.getMessage());
                     return true;
                 });

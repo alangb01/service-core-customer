@@ -1,14 +1,13 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.in.rest.mapper;
 
 import org.springframework.stereotype.Component;
-
+import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerCreateRequest;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerResponse;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerUpdateRequest;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerCreateRequest;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerResponse;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.CustomerUpdateRequest;
 
 @Component
 public class RestMapper {

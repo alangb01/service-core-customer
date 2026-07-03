@@ -2,7 +2,6 @@ package pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper;
 
 import java.time.Instant;
 import java.util.UUID;
-
 import org.springframework.stereotype.Component;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerCreatedEvent;

@@ -4,18 +4,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import pe.nom.charlygastelo.app.customerservice.adapter.in.event.exception.CustomerEventProducerException;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.ErrorResponse;
+import pe.nom.charlygastelo.app.customerservice.adapter.out.cache.exception.CustomerCacheException;
+import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.exception.CustomerRepositoryException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerAlreadyExistsException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerNotFoundException;
-import pe.nom.charlygastelo.app.customerservice.domain.exception.ServiceUnavailableException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerProfileNotAllowedException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.CustomerStateException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.InvalidCustomerTypeException;
 import pe.nom.charlygastelo.app.customerservice.domain.exception.InvalidDocumentTypeException;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.rest.dto.ErrorResponse;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.exception.CustomerRepositoryException;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.cache.exception.CustomerCacheException;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.event.exception.CustomerEventProducerException;
+import pe.nom.charlygastelo.app.customerservice.domain.exception.ServiceUnavailableException;
 
 
 @RestControllerAdvice

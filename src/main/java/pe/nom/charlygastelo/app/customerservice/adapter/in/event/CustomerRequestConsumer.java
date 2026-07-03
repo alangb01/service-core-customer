@@ -1,13 +1,14 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.in.event;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.AvroJsonDeserializer;
+import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.CustomerEventMapper;
 import pe.nom.charlygastelo.app.customerservice.adapter.out.event.CustomerResponseProducer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.CustomerEventMapper;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerRequestEvent;
 
 @Slf4j
@@ -50,11 +51,13 @@ public class CustomerRequestConsumer {
                                         mapper.toCustomerResponseEvent(customer, correlationId)
                                 );
 
-                                log.info("[CUSTOMER-RESPONSE] CustomerResponseEvent published. correlationId={}, customerId={}",
+                                log.info("[CUSTOMER-RESPONSE] CustomerResponseEvent published. " +
+                                                "correlationId={}, customerId={}",
                                         correlationId, customerId);
                             },
                             error -> {
-                                log.error("[CUSTOMER-REQUEST] Error searching customer. correlationId={}, customerId={}, reason={}",
+                                log.error("[CUSTOMER-REQUEST] Error searching customer. correlationId={}, " +
+                                                "customerId={}, reason={}",
                                         correlationId, customerId, error.getMessage(), error);
 
                                 responseProducer.publish(
@@ -62,7 +65,8 @@ public class CustomerRequestConsumer {
                                         mapper.toCustomerNotFoundEvent(customerId, correlationId)
                                 );
 
-                                log.warn("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published due to error. correlationId={}, customerId={}",
+                                log.warn("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published due to error. " +
+                                                "correlationId={}, customerId={}",
                                         correlationId, customerId);
                             },
                             () -> {
@@ -74,7 +78,8 @@ public class CustomerRequestConsumer {
                                         mapper.toCustomerNotFoundEvent(customerId, correlationId)
                                 );
 
-                                log.info("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published. correlationId={}, customerId={}",
+                                log.info("[CUSTOMER-RESPONSE] CustomerNotFoundEvent published. " +
+                                                "correlationId={}, customerId={}",
                                         correlationId, customerId);
                             }
                     );

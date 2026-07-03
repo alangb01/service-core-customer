@@ -3,7 +3,6 @@ package pe.nom.charlygastelo.app.customerservice.adapter.out.persistence;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Data;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;

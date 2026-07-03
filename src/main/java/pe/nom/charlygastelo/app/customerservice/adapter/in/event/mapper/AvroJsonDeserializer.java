@@ -2,7 +2,6 @@ package pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-
 import org.apache.avro.Schema;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;

@@ -8,8 +8,6 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.CustomerType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 
-import javax.print.Doc;
-
 public interface CustomerRepositoryPort {
 
     Single<Customer> save(Customer customer);

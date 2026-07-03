@@ -1,10 +1,10 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.out.event;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.AvroJsonSerializer;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
 

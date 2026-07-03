@@ -1,12 +1,12 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.out.event;
 
-import io.reactivex.rxjava3.core.Completable;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import io.reactivex.rxjava3.core.Completable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.AvroJsonSerializer;
 import pe.nom.charlygastelo.app.customerservice.adapter.in.event.mapper.CustomerEventMapper;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;

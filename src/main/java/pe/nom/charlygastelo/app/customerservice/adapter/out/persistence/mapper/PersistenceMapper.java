@@ -1,10 +1,9 @@
 package pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.mapper;
 
 import org.springframework.stereotype.Component;
-
+import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.CustomerDocument;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.CustomerDocument;
 
 @Component
 public class PersistenceMapper {
@@ -28,7 +27,7 @@ public class PersistenceMapper {
                 d.getCustomerType(),
                 d.getDocumentType(),
                 d.getDocumentNumber(),
-                d.getProfileType()==null? ProfileType.REGULAR: d.getProfileType(),
+                d.getProfileType() == null ? ProfileType.REGULAR : d.getProfileType(),
                 d.getName(),
                 d.getLastName(),
                 d.getEmail(),
