@@ -12,7 +12,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.model.DocumentType;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ProfileType;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.event.CustomerEventProducer;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.event.CustomerEventProducer;
 
 import static org.mockito.Mockito.*;
 

@@ -5,3 +5,13 @@ spring:
   config:
     import: "configserver:http://localhost:8888"
 
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#    disable-swagger-default-url: false
+#
+#  group-configs:
+#    - group: customer-service
+#      paths-to-match: /customers/**

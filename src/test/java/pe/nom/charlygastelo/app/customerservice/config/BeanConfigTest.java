@@ -8,9 +8,10 @@ import pe.nom.charlygastelo.app.customerservice.application.usecase.ListCustomer
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.CustomerRepositoryAdapter;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.CustomerReactiveRepository;
-import pe.nom.charlygastelo.app.customerservice.adapter.out.persistence.mapper.PersistenceMapper;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerReactiveRepository;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.mapper.PersistenceMapper;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.config.BeanConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
