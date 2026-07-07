@@ -8,14 +8,14 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.cache.RedisCustomerCacheAdapter;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerReactiveRepository;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.mapper.PersistenceMapper;
 import pe.nom.charlygastelo.app.customerservice.application.usecase.*;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.cache.RedisCustomerCacheAdapter;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerReactiveRepository;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.CustomerRepositoryAdapter;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.mapper.PersistenceMapper;
 
 @Configuration
 public class BeanConfig {

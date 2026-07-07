@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.cache.exception.CustomerCacheException;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.cache.exception.CustomerCacheException;
 
 @RequiredArgsConstructor
 public class RedisCustomerCacheAdapter implements CustomerCachePort {

@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 import io.reactivex.rxjava3.core.Completable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.AvroJsonSerializer;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.CustomerEventMapper;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.AvroJsonSerializer;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.CustomerEventMapper;
 
 @Slf4j
 @Component
