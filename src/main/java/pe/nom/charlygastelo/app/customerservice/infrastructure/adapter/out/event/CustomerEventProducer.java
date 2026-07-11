@@ -9,17 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.domain.model.Customer;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.AvroJsonSerializer;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.CustomerEventMapper;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.event.mapper.CustomerEventOutMapper;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomerEventProducer implements CustomerEventProducerPort {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final AvroJsonSerializer serializer;
-    private final CustomerEventMapper mapper;
+    private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
+    private final CustomerEventOutMapper mapper;
 
     @Value("${topic.customer-created}")
     private String customerCreatedTopic;
@@ -56,12 +54,11 @@ public class CustomerEventProducer implements CustomerEventProducerPort {
                 log.debug("[CUSTOMER-EVENT] Serializing event. key={}, event={}",
                         key, event);
 
-                String payload = serializer.serialize(event);
 
                 log.debug("[CUSTOMER-EVENT] Payload serialized successfully. key={}, payload={}",
-                        key, payload);
+                        key, event);
 
-                kafkaTemplate.send(topic, key, payload)
+                kafkaTemplate.send(topic, key, event)
                         .whenComplete((result, error) -> {
                             if (error != null) {
                                 log.error("[CUSTOMER-EVENT] Error sending event. topic={}, key={}, reason={}",

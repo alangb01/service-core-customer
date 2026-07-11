@@ -1,11 +1,11 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.event;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.AvroJsonSerializer;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
 
 @Slf4j
@@ -13,9 +13,7 @@ import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
 @RequiredArgsConstructor
 public class CustomerResponseProducer {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final AvroJsonSerializer serializer;
-
+    private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
     @Value("${topic.customer-response}")
     private String customerResponseTopic;
 
@@ -27,12 +25,11 @@ public class CustomerResponseProducer {
             log.debug("[CUSTOMER-RESPONSE] Serializing CustomerResponseEvent. correlationId={}, event={}",
                     correlationId, event);
 
-            String payload = serializer.serialize(event);
 
             log.debug("[CUSTOMER-RESPONSE] Payload serialized successfully. correlationId={}, payload={}",
-                    correlationId, payload);
+                    correlationId, event);
 
-            kafkaTemplate.send(customerResponseTopic, correlationId, payload)
+            kafkaTemplate.send(customerResponseTopic, correlationId, event)
                     .whenComplete((result, error) -> {
                         if (error != null) {
                             log.error("[CUSTOMER-RESPONSE] Error sending event. correlationId={}, reason={}",

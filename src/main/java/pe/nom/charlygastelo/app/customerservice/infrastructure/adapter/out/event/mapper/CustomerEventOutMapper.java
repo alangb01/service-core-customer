@@ -1,4 +1,4 @@
-package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper;
+package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.event.mapper;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -9,8 +9,10 @@ import pe.nom.charlygastelo.app.shared.avro.dto.CustomerDeletedEvent;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerResponseEvent;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerUpdatedEvent;
 
+
+
 @Component
-public class CustomerEventMapper {
+public class CustomerEventOutMapper {
 
     public CustomerCreatedEvent toCustomerCreatedEvent(Customer customer) {
         return CustomerCreatedEvent.newBuilder()

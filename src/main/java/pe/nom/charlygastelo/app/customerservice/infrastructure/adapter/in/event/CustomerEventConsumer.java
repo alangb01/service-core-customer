@@ -1,13 +1,11 @@
 package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event;
 
-
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.AvroJsonDeserializer;
-import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.CustomerEventMapper;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.event.mapper.CustomerEventInMapper;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.event.CustomerResponseProducer;
 import pe.nom.charlygastelo.app.shared.avro.dto.CustomerRequestEvent;
 
@@ -16,23 +14,16 @@ import pe.nom.charlygastelo.app.shared.avro.dto.CustomerRequestEvent;
 @RequiredArgsConstructor
 public class CustomerEventConsumer {
 
-    private final AvroJsonDeserializer deserializer;
     private final CustomerRepositoryPort repository;
     private final CustomerResponseProducer responseProducer;
-    private final CustomerEventMapper mapper;
+    private final CustomerEventInMapper mapper;
 
     @KafkaListener(topics = "${topic.customer-request}", groupId = "customer-service")
-    public void consume(String message) {
+    public void consume(CustomerRequestEvent event) {
         log.info("[CUSTOMER-REQUEST] Message received from Kafka.");
 
         try {
-            log.debug("[CUSTOMER-REQUEST] Deserializing CustomerRequestEvent. rawMessage={}", message);
-
-            CustomerRequestEvent event = deserializer.deserialize(
-                    message,
-                    CustomerRequestEvent.class,
-                    CustomerRequestEvent.getClassSchema()
-            );
+            log.debug("[CUSTOMER-REQUEST] Deserializing CustomerRequestEvent. rawMessage={}", event);
 
             String correlationId = event.getCorrelationId().toString();
             String customerId = event.getCustomerId().toString();
