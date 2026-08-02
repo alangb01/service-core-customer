@@ -1,5 +1,6 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
+import org.springframework.stereotype.Component;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerCachePort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProducerPort;
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class CreateCustomerUseCase {

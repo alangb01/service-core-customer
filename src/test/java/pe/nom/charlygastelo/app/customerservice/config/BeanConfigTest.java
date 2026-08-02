@@ -29,35 +29,5 @@ class BeanConfigTest {
         assertThat(result).isInstanceOf(CustomerRepositoryAdapter.class);
     }
 
-    @Test
-    void createCustomerUseCaseShouldReturnCreateCustomerUseCase() {
-        CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
-        CustomerEventProducerPort producerPort = Mockito.mock(CustomerEventProducerPort.class);
-        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
-        CreateCustomerUseCase result = beanConfig.createCustomerUseCase(repository, producerPort, cache);
 
-        assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(CreateCustomerUseCase.class);
-    }
-
-    @Test
-    void getCustomerUseCaseShouldReturnGetCustomerUseCase() {
-        CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
-        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
-        GetCustomerUseCase result = beanConfig.getCustomerUseCase(repository,cache);
-
-        assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(GetCustomerUseCase.class);
-    }
-
-    @Test
-    void listCustomersUseCaseShouldReturnListCustomersUseCase() {
-        CustomerRepositoryPort repository = Mockito.mock(CustomerRepositoryPort.class);
-        CustomerCachePort cache = Mockito.mock(CustomerCachePort.class);
-
-        ListCustomersUseCase result = beanConfig.listCustomersUseCase(repository, cache);
-
-        assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(ListCustomersUseCase.class);
-    }
 }

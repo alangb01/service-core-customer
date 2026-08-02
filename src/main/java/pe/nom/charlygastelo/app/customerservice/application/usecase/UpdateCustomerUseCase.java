@@ -1,5 +1,6 @@
 package pe.nom.charlygastelo.app.customerservice.application.usecase;
 
+import org.springframework.stereotype.Component;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerEventProduce
 import pe.nom.charlygastelo.app.customerservice.domain.port.CustomerRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.persistence.exception.CustomerRepositoryException;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class UpdateCustomerUseCase {
