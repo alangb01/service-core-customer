@@ -1,6 +1,3 @@
 spring:
   application:
     name: service-core-customer
-
-  config:
-    import: "configserver:http://localhost:8888"

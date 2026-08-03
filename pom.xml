@@ -138,11 +138,11 @@
             <version>${confluent.version}</version>
         </dependency>
 
-        <!-- Bootstrap -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; Bootstrap &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
+<!--        </dependency>-->
 
         <!-- OpenAPI WebFlux (CORRECTO) -->
         <dependency>
