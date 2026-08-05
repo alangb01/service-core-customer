@@ -1,4 +1,4 @@
-package pe.nom.charlygastelo.app.customerservice.domain.model;
+package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.client.dto;
 
 import java.util.List;
 

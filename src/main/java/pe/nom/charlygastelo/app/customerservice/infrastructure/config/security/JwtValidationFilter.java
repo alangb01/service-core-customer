@@ -13,7 +13,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pe.nom.charlygastelo.app.customerservice.domain.port.AuthRepositoryPort;
+import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.client.AuthClientAdapter;
 import reactor.core.publisher.Mono;
 
 
@@ -25,7 +25,7 @@ public class JwtValidationFilter implements WebFilter {
     private final AntPathMatcher matcher = new AntPathMatcher();
     private final SecurityPermitPathsProperties securityPermitPathsProperties;
 
-    private final AuthRepositoryPort authClient; // WebClient hacia auth-service
+    private final AuthClientAdapter authClient; // WebClient hacia auth-service
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
