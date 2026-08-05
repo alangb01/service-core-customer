@@ -4,9 +4,9 @@ package pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.out.clie
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import pe.nom.charlygastelo.app.customerservice.domain.port.AuthRepositoryPort;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ValidateRequest;
 import pe.nom.charlygastelo.app.customerservice.domain.model.ValidateResponse;
+import pe.nom.charlygastelo.app.customerservice.domain.port.AuthRepositoryPort;
 import reactor.core.publisher.Mono;
 
 @Component
