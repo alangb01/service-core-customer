@@ -16,7 +16,7 @@ import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.d
 import pe.nom.charlygastelo.app.customerservice.infrastructure.adapter.in.rest.mapper.RestMapper;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/customers")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class CustomerController {
